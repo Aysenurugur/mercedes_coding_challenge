@@ -1,14 +1,12 @@
 using mercedes_coding_challenge.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connStr = builder.Configuration.GetConnectionString(name: "DefaultConnection");
+string connStr = builder.Configuration.GetConnectionString(name: "DefaultConnection") ?? string.Empty;
 builder.Services.AddDbContext<MyDbContext>(optionsAction: options => options.UseSqlite(connStr));
 
 var app = builder.Build();
@@ -24,8 +22,6 @@ app.UseHttpsRedirection();
 // API endpoint for shortening a URL and save it to a local database
 app.MapPost(pattern: "/url", handler: async (UrlDto url, HttpContext httpContext) =>
 {
-    //var request = await httpContext.Request.ReadFromJsonAsync<UrlDto>() ?? new UrlDto();
-
     // Validating input URL
     if (!Uri.TryCreate(url.Url, UriKind.Absolute, out var inputUri))
     {
@@ -53,7 +49,7 @@ app.MapPost(pattern: "/url", handler: async (UrlDto url, HttpContext httpContext
 });
 
 // Catch all page: redirecting shortened URL to its original address
-app.MapFallback(handler: async(HttpContext httpContext) =>
+app.MapFallback(handler: async (HttpContext httpContext) =>
 {
     var db = httpContext.RequestServices.GetRequiredService<MyDbContext>();
     var collection = db.Urls;
