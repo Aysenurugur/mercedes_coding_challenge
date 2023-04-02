@@ -81,7 +81,7 @@ app.MapPost(pattern: "/url_customizer", handler: async (UrlCustomizerDto url, Ht
 
 
     var result = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{entry.UrlChunk}";
-    await httpContext.Response.WriteAsJsonAsync(new UrlShortResponseDto() { Url = result });
+    await httpContext.Response.WriteAsJsonAsync(new UrlCustomResponseDto() { Url = result });
 });
 
 //Catch all page: redirecting shortened URL to its original address
