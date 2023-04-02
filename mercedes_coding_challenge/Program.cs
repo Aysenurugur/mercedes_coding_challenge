@@ -49,7 +49,7 @@ app.MapPost(pattern: "/url", handler: async (UrlDto url, HttpContext httpContext
 
 
     var result = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{entry.UrlChunk}";
-    await httpContext.Response.WriteAsJsonAsync(new { url = result });
+    await httpContext.Response.WriteAsJsonAsync(new UrlShortResponseDto() { Url = result });
 });
 
 // Catch all page: redirecting shortened URL to its original address
